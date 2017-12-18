@@ -7,7 +7,7 @@ module.exports = {
     // First application
     {
       name      : 'kos-oss',
-      script    : './server/client.js',
+      script    : 'nodemon server/index.js',
       env: {
         COMMON_VARIABLE: 'true'
       },
