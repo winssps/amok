@@ -34,7 +34,7 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'git@github.com:winssps/koa-oss.git',
       path : '/home/koas/www/aliyun-oss',
-      'post-deploy': 'npm run build-dev && pm2 startOrRestart ecosystem.config.js --env production'
+      'post-deploy': 'pm2 startOrRestart ecosystem.config.js --env production && npm run build-dev '
     }
   }
 };
