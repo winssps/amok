@@ -1,0 +1,29 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'ali-oss' ]
+2 info using npm@3.10.9
+3 info using node@v7.1.0
+4 verbose config Skipping project config: /Users/wins/.npmrc. (matches userconfig)
+5 verbose stack Error: Cannot find module 'realize-package-specifier'
+5 verbose stack     at Function.Module._resolveFilename (module.js:472:15)
+5 verbose stack     at Function.Module._load (module.js:420:25)
+5 verbose stack     at Module.require (module.js:500:17)
+5 verbose stack     at require (internal/module.js:20:19)
+5 verbose stack     at Object.<anonymous> (/usr/local/lib/node_modules/npm/lib/install/deps.js:11:31)
+5 verbose stack     at Module._compile (module.js:573:32)
+5 verbose stack     at Object.Module._extensions..js (module.js:582:10)
+5 verbose stack     at Module.load (module.js:490:32)
+5 verbose stack     at tryModuleLoad (module.js:449:12)
+5 verbose stack     at Function.Module._load (module.js:441:3)
+6 verbose cwd /Users/wins/Desktop/aliyun-oss
+7 error Darwin 15.6.0
+8 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "install" "ali-oss"
+9 error node v7.1.0
+10 error npm  v3.10.9
+11 error code MODULE_NOT_FOUND
+12 error Cannot find module 'realize-package-specifier'
+13 error If you need help, you may report this error at:
+13 error     <https://github.com/npm/npm/issues>
+14 verbose exit [ 1, true ]
