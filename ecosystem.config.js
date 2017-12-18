@@ -7,7 +7,7 @@ module.exports = {
     // First application
     {
       name      : 'kos-oss',
-      script    : '/server/client.js',
+  //    script    : '/server/client.js',
       env: {
         COMMON_VARIABLE: 'true'
       },
@@ -34,7 +34,7 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'git@github.com:winssps/koa-oss.git',
       path : '/home/koas/www/aliyun-oss',
-      'post-deploy' : 'npm install && pm2 startOrRestart ecosystem.config.js --env production'
+      'post-deploy': 'npm run build-dev  && nodemon server/index.js && pm2 startOrRestart ecosystem.config.js --env production'
     }
   }
 };
