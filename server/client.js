@@ -1,13 +1,3 @@
-
-//var co = require('co');
-//var oss = require('ali-oss');
-
-// const Koa = require('koa');
-// const Router = require('koa-router');
-
-// const app = new Koa();
-// const router = new Router();
-
 import Koa from 'koa';
 import Router from "koa-router";
 import co from "co";
@@ -16,6 +6,8 @@ import views from 'koa-views';
 import path from 'path';
 import koaBetterBody from 'koa-better-body';
 
+
+import usermongo from './config.js';
 
 
 const app = new Koa();
@@ -44,6 +36,12 @@ var client = new oss({
 });
 
 
+app.use(async (ctx, next) => {
+    console.log("hello mongodb!");
+    await next();
+    console.log(usermongo); 
+});
+
 var result;
 
 //首页
@@ -55,6 +53,8 @@ router.get('/',async (ctx, next) => {
 
 router.post('/login',async (ctx,next) => {
     console.log(ctx.request.fields);
+
+
     ctx.body = 200;
 });
 

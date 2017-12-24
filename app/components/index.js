@@ -45,37 +45,6 @@ export default class Index extends React.Component {
                  <input type="file" name="files" onChange={ (e) => {
                     this.upLoadFile(e.target.files);
                  }} /> 
-
-                    <div className="Grid">
-                        <div className="Grid-cell u-lof4">
-                            <div className="list">
-                                <div className="folder">
-                                    <p className="name">第一次实验</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="Grid-cell u-lof4">
-                            <div className="list">
-                                <div className="folder">
-                                    <p className="name">第一次实验</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="Grid-cell u-lof4">
-                            <div className="list">
-                                <div className="folder">
-                                    <p className="name">第一次实验</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="Grid-cell u-lof4">
-                            <div className="list">
-                                <div className="folder">
-                                    <p className="name">第一次实验</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
             </div>
         );
     }

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { BrowserRouter, Route, Link, HashRouter ,Switch} from 'react-router-dom';
+import { Route, HashRouter ,Switch} from 'react-router-dom';
 
 
 import Head from './components/head.js';

@@ -5,6 +5,7 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "koa-better-body": "^3.0.4",
+    "mongoose": "^4.13.7",
     "react-bootstrap": "^0.31.5",
     "webpack": "^3.10.0"
   },
