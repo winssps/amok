@@ -45,3 +45,35 @@
 .folder .name {
     margin: auto;
 }
+
+
+.fsdiv {
+    width: 1200px;
+    margin:  0 auto;
+}
+
+.fsdiv ul {
+    padding: 0px;
+}
+
+.fslist {
+    list-style: none;
+    padding: 5px 0px;
+}
+
+.fslist div {
+    display: inline-block;
+  /*  text-align: center;  */
+}
+
+.fslist .name {
+    width: 45%;
+}
+
+.fslist .size {
+    width: 20%;
+}
+
+.fslist .time {
+    width: 35%;
+}
