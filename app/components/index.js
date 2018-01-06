@@ -10,10 +10,14 @@ export default class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            file : null
+            file : null,
+            listnum : 0,
+            talist : null
         };
         this.upLoadFile = this.upLoadFile.bind(this);
         this.getFileList = this.getFileList.bind(this);
+        this.getFileSize = this.getFileSize.bind(this);
+        this.mapFileDom = this.mapFileDom.bind(this);
     }
     componentDidMount() {
         this.getFileList();
@@ -29,9 +33,11 @@ export default class Index extends React.Component {
                         _that.setState({
                             file: res.body.objects
                         });
-                    }
-               // console.log("请求内执行");
-              //  console.log(_that.state.file);
+                    var filelist = _that.mapFileDom();     
+                   _that.setState({
+                       talist: filelist
+                   });
+                }
             });
     }
     upLoadFile(files) {
@@ -46,9 +52,6 @@ export default class Index extends React.Component {
                     .send(data)
                     .end(function (err, res) {
                         if (err || !res.ok) {
-                          /*  this.setState({
-                                file : res.;
-                            });*/
                         } else {
                             alert("上传成功！");
                         }
@@ -58,37 +61,39 @@ export default class Index extends React.Component {
             }
         }
     } 
-    render() {
-        function getfilesize(size) {
-            if (!size)
-                return "";
-            var num = 1024.00; //byte
-            if (size < num)
-                return size + "B";
-            if (size < Math.pow(num, 2))
-                return (size / num).toFixed(2) + "K"; //kb
-            if (size < Math.pow(num, 3))
-                return (size / Math.pow(num, 2)).toFixed(2) + "M"; //M
-            if (size < Math.pow(num, 4))
-                return (size / Math.pow(num, 3)).toFixed(2) + "G"; //G
-            return (size / Math.pow(num, 4)).toFixed(2) + "T"; //T
-        }
+    getFileSize(size) {
+        if (!size) return "";
+        var num = 1024.00; //byte
+        if (size < num)return size + "B";
+        if (size < Math.pow(num, 2))
+            return (size / num).toFixed(2) + "K"; //kb
+        if (size < Math.pow(num, 3))
+            return (size / Math.pow(num, 2)).toFixed(2) + "M"; //M
+        if (size < Math.pow(num, 4))
+            return (size / Math.pow(num, 3)).toFixed(2) + "G"; //G
+        return (size / Math.pow(num, 4)).toFixed(2) + "T"; //T
+    }
+    mapFileDom() {
+        var _that = this;
         let tasks = this.state.file;
         var talist = null;
-        if(tasks) {
-          //  console.log("数据不为空");
-          //  console.log(tasks);
-         talist = this.state.file.map(function (item) {
+        var listnum = 0;
+        if (tasks) {
+            talist = this.state.file.map(function (item) {
+                listnum++;
                 return (
-                    <li key={item.id} className="fslist">
+                    <li key={item.etag} className="fslist">
                         <div className="name">{item.name.substring(7)}</div>
-                        <div className="size">{getfilesize(item.size) }</div>
+                        <div className="size">{_that.getFileSize(item.size)}</div>
                         <div className="time">{item.lastModified}</div>
                     </li>
                 )
-            }) 
+            });
         }
-
+        this.state.listnum = listnum;
+        return talist;
+    }
+    render() {
         return (
             <div>
                <h2>选择你要上传的文件</h2>
@@ -99,12 +104,11 @@ export default class Index extends React.Component {
                  <div className="fsdiv">
                     <ul>
                         <li className="fslist">
-                            <div className="name">文件名</div>
+                            <div className="name">文件名({this.state.listnum})</div>
                             <div className="size">大小</div>
                             <div className="time">时间</div>
-                            
                         </li>
-                        {talist}
+                        {this.state.talist}
                     </ul>                     
                  </div>
             </div>

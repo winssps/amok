@@ -27,21 +27,11 @@ app.use(views(path.join(__dirname, '../views'), {
     extension: 'html'
 }));
 
-
-const CONFIG = {
-    key: 'koa:sess', /** (string) cookie key (default is koa:sess) */
-    /** (number || 'session') maxAge in ms (default is 1 days) */
-    /** 'session' will result in a cookie that expires when session/browser is closed */
-    /** Warning: If a session cookie is stolen, this cookie will never expire */
-    maxAge: 86400000,
-    overwrite: true, /** (boolean) can overwrite or not (default true) */
-    httpOnly: true, /** (boolean) httpOnly or not (default true) */
-    signed: true, /** (boolean) signed or not (default true) */
-    rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. default is false **/
-};
-
-app.use(session(CONFIG, app));
-
+app.keys = ['im a newer secret', 'i like turtle'];
+app.use(session({
+    key: "SESSIONID",   //default "koa:sess"
+    maxAge: 60 * 1000 * 30  //设置session超时时间
+},app));
 
 
 app.use(async (ctx, next) => {
@@ -53,6 +43,9 @@ app.use(async (ctx, next) => {
 
 app.use(router.routes());
 app.use(router.allowedMethods());
+
+
+
 
 var client = new oss({
     region: 'oss-cn-hangzhou',
@@ -103,37 +96,28 @@ router.post('/login',async (ctx,next) => {
     let shasum = crypto.createHash('sha1');
     shasum.update(password);
     password = shasum.digest('hex');
-
-
-  /*  shasum.update(newUser.userpassword);
-    newUser.userpassword = shasum.digest('hex');
-    newUser.uid = randomNum(100000, 10000000);   */
-
-    let ret = await usermodel.find({ username: username});
-    if (ret) { //有结果表示有相应的用户
-
-        console.log(ret);
-      /*  if (ret[0].userpassword == password) {
-            //可进行登录
-            ctx.session.uname = ret[0].username;
-        } else {
-            //用户名密码不正确
-            ctx.session.uname = null;
-        }*/
-    }else {
-        //用户名密码不正确
-        ctx.session.uname = null;
+    let ret;
+    await co(function *() {
+        ret = yield usermodel.find({ username: username });
+    });
+    if(ret.length > 0) { //有结果表示有相应的用户
+        if (ret[0].userpassword == password) {
+            if (ctx.session.view === undefined) {
+                ctx.session.view = ret[0].username;
+            }else {
+                ctx.session.view = ret[0].username;
+            }
+            ctx.body = true;
+        } else { //用户名密码不正确
+            ctx.session.view = null;
+            ctx.body = false;
+        }
+    } else { //用户名密码不正确
+        ctx.session.view = null;
+        ctx.body = false;
     }
-    //返回一个用户状态，不返回路由，前端根据数据来改变页面
-    await ctx;
+    console.log('view', ctx.session.view) //log 输出
 });
-
-/*
-//上传页面
-router.get('/upload',(ctx, next) => {
-    ctx.body = 'upload i';
-});
-*/
 
 router.post('/upload', async (ctx, next) => {
  
