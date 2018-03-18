@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "private": false,
   "dependencies": {
+    "antd": "^3.1.5",
     "bootstrap": "^3.3.7",
     "koa-better-body": "^3.0.4",
+    "koa-cookie": "^1.0.0",
+    "koa2-cors": "^2.0.5",
     "mongoose": "^4.13.7",
     "react-bootstrap": "^0.31.5",
     "webpack": "^3.10.0"
@@ -19,6 +22,7 @@
     "webpack-dev-server": "^2.9.7"
   },
   "scripts": {
+    "start": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-dev": "./node_modules/.bin/webpack-dev-server --config webpack.config.js --colors"
   }
