@@ -1,4 +1,4 @@
-# koa-oss
+# amok
 
 用户名/winssps/winssps1144
 
