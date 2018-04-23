@@ -1,23 +1,25 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu, Breadcrumb,message } from 'antd';
 import { routerRedux } from 'dva/router';
 
 
-import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 
-import { getCookie } from '../utils/helper';
 
 const { Header, Content, Footer } = Layout;
 
 
 
-const Login = ({ dispatch, login }) => {
+const Register = ({ dispatch, register }) => {
     function handleonSubmit(value) { //点击删除之后，相当于路由发出了一个delete action 
         dispatch({
-            type: 'login/submit',
+            type: 'register/submit',
             payload: value, 
         });
+    }
+    if (register.isRegister) {
+        message.success("注册成功，3秒之后跳到登录界面……");
     }
     return (
         <Layout>
@@ -43,9 +45,9 @@ const Login = ({ dispatch, login }) => {
             <Content style={{ padding: '0 50px', marginTop: 64 }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
                     <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>Login</Breadcrumb.Item>
+                    <Breadcrumb.Item>Register</Breadcrumb.Item>
                 </Breadcrumb>
-                <LoginForm onSubmitValues={handleonSubmit} />
+                <RegisterForm onSubmitValues={handleonSubmit} />
             </Content>
             <Footer style={{ textAlign: 'center' }}>
                 Ant Design ©2016 Created by Ant UED
@@ -55,7 +57,7 @@ const Login = ({ dispatch, login }) => {
 };
 
 
-// export default Products;
-export default connect(({ login }) => ({
-    login,
-}))(Login);
+// export default ;
+export default connect(({ register }) => ({
+    register,
+}))(Register);

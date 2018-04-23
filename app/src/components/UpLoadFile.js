@@ -1,12 +1,12 @@
 import { Upload, Button, Icon, message  } from 'antd';
 import { connect } from 'dva';
-import { getLocalStorage } from '../utils/helper';
+import { getLocalStorage, getCookie } from '../utils/helper';
 
 const UpLoadFile = ({dispatch, upload }) => {
 
     const props = {
         name: 'file',
-        action: 'http://localhost:4535/upload?id=' + getLocalStorage('groupsname'),
+        action: 'http://localhost:4535/upload?id=' + getLocalStorage('groupsname') + "&&share=" + getCookie("share"),
         headers: {
             authorization: 'authorization-text',
         },
@@ -27,8 +27,8 @@ const UpLoadFile = ({dispatch, upload }) => {
     };
     return (
         <Upload {...props} >
-            <Button>
-                <Icon type="upload" /> 点击上传文件
+            <Button type="primary" style={{marginLeft:"20px"}}>
+                <Icon type="upload" /> 提交
              </Button>
         </Upload>
     );
@@ -36,7 +36,4 @@ const UpLoadFile = ({dispatch, upload }) => {
 
 
 
-export default connect(({ upload }) => {
-    return { upload };
-}
-)(UpLoadFile);
+export default connect()(UpLoadFile);

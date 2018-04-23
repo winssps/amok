@@ -1,7 +1,8 @@
 
 import { message } from 'antd';
-
+import { routerRedux } from 'dva/router';
 import { patch, deleteGroups, downLoad } from '../services/getgroups';
+import { getCookie } from '../utils/helper';
 
 export default {
     namespace: 'getgroups',
@@ -20,10 +21,23 @@ export default {
     subscriptions: {
         setup({dispatch, history}) {
             history.listen(location => {
-                if(location.pathname === '/') {
+              /*  let regexp = new RegExp('^/share/[A-Za-z0-9]+$');
+                let reg = new RegExp('[A-Za-z0-9]+$');
+                console.log(location);
+                if(regexp.test(location.pathname)) {
+                  
+                    var newstr = location.pathname.match(reg);
+                    console.log(newstr[0]);
+                      dispatch({
+                        type: 'share',
+                        url: newstr[0]
+                    });
+                }
+                */
+                if(location.pathname === "/admin") {
                     dispatch({
                         type: 'query',
-                        payload: {}
+                        payload: getCookie("username"),
                     });
                 }
             });
@@ -32,7 +46,7 @@ export default {
     effects: {
         *query({ payload }, { select, call, put }) {  //拉取列表
             yield put({ type: 'showLoading' });
-            let { data } = yield call(patch);
+            let { data } = yield call(patch, payload);
             if (data) {
                 console.log(data);
                yield put({
@@ -41,16 +55,12 @@ export default {
                         list: data,
                     }
                 });
-                yield put({
-                    type: 'newgroups/ok',
-                });
             }
         },
-        *delete({ payload: id }, { select, call, put }) {  //拉取列表
-            yield put({ type: 'showLoading' });
-            const { data } = yield call(deleteGroups, id);
+        *delete({payload}, {select, call, put}) {
+            let { data } = yield call(deleteGroups, payload);
             if (data) {
-                
+              //  console.log(data);
                 yield put({
                     type: 'querySuccess',
                     payload: {
@@ -58,12 +68,6 @@ export default {
                     }
                 });
             }
-        },
-        *download({ payload: id }, { select, call, put }) {  //拉取列表
-            const { data } = yield call(downLoad, id);
-            if(data) {
-                message.info(data.message);
-            }
-        },
+        }
     }
 };

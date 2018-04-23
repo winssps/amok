@@ -7,7 +7,7 @@ export default {
     namespace: 'showinfo',
     state: {
         list: [],
-        loading: false,
+        loading: false
     },
     reducers: {
         showLoading(state, action) {
@@ -43,22 +43,14 @@ export default {
         setup({ dispatch, history }) {
             history.listen(location => {
                 if (location.pathname === '/showinfo') {
-                 //   console.log('重定向接收参数：%o', location.state);
                     let state  = location.state;
-                    
-                    if (state !== undefined) {
-                    //    setCookie("groupsname",state.id);
+                    if (state !== undefined) {   //有分组的id 传过来的话
                         setLocalStorage('groupsname', state.id);
                         dispatch({
                             type: 'query',
                             payload: state.id
                         });
                     }
-                    /* else if(getCookie("groupsname")) {
-                        dispatch({
-                            type: 'query',
-                        });
-                    }*/
                     else {
                         dispatch(
                             routerRedux.push({

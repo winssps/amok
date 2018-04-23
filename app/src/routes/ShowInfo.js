@@ -7,8 +7,8 @@ import Filelist from '../components/Filelist';
 import UpLoadFile from '../components/UpLoadFile';
 
 import { getCookie } from '../utils/helper';
-const { Header, Content, Footer } = Layout;
-
+const { Header, Content, Footer, Sider } = Layout;
+const { SubMenu } = Menu;
 
 
 const ShowInfo = ({ dispatch, products }) => {
@@ -18,7 +18,7 @@ const ShowInfo = ({ dispatch, products }) => {
     function handleBack(params) {
         dispatch(
             routerRedux.push({
-                pathname: '/',
+                pathname: '/admin',
             }));
     }
     var username = getCookie("username");
@@ -32,54 +32,49 @@ const ShowInfo = ({ dispatch, products }) => {
     } else {
     return (
         <Layout>
-            <Header style={{ position: 'fixed', width: '100%' }}>
+            <Header className="header">
                 <div className="logo" />
                 <Menu
                     theme="dark"
                     mode="horizontal"
-                    defaultSelectedKeys={['2']}
+                    defaultSelectedKeys={['0']}
                     style={{ lineHeight: '64px' }}
                     onSelect={({ key }) => {
-                        if (key === "3" && username === "登录") {
+                        if (key === "1") {
                             dispatch(
                                 routerRedux.push({
-                                    pathname: '/login',
-                                }));
-                        } else if (key === "3") {
-                            dispatch(
-                                routerRedux.push({
-                                    pathname: '/admin',
+                                    pathname: '/',
                                 }));
                         }
                     }}
                 >
                     <Menu.Item key="1">主页</Menu.Item>
-                    <Menu.Item key="2">上传</Menu.Item>
-                    <Menu.Item key="3">{username}</Menu.Item>
+                    <Menu.Item key="1" style={{ "float": "right", }}>{username}</Menu.Item>
                 </Menu>
             </Header>
-            <Content style={{ padding: '0 50px', marginTop: 64 }}>
-                <Breadcrumb style={{ margin: '16px 0' }}>
-                    <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>Groups</Breadcrumb.Item>
-                    <Breadcrumb.Item>List</Breadcrumb.Item>
-                </Breadcrumb>
-                
-                <div style={{width:"100%",height:"70px"}}>
-                    <div style={{float:"left"}}>
-                        <Button type="primary" onClick={handleBack}>
-                            <Icon type="left" style={{ fontSize: 14, color: '#fff'}} />返回
-                        </Button>
-                    </div>
-                    <div style={{ float: "right" }}>
-                        <UpLoadFile />
-                    </div>
-                </div>
-                <Filelist onDelete={handleDelete} products={products}  />
-            </Content>
-            <Footer style={{ textAlign: 'center' }}>
-                Ant Design ©2016 Created by Ant UED
-            </Footer>
+            <Layout>
+                <Layout style={{ padding: '0 24px 24px' }}>
+                    <Content style={{ padding: '0 50px'}}>
+                        <Breadcrumb style={{ margin: '16px 0' }}>
+                            <Breadcrumb.Item>Home</Breadcrumb.Item>
+                            <Breadcrumb.Item>Groups</Breadcrumb.Item>
+                            <Breadcrumb.Item>List</Breadcrumb.Item>
+                        </Breadcrumb>
+                        <div style={{ width: "100%", height: "50px" }}>
+                            <div style={{ float: "left", padding: "10px 0px" }}>
+                                <Button onClick={handleBack}>
+                                    <Icon type="left" style={{ fontSize: "14px" }} />返回
+                                </Button>
+                                <UpLoadFile />
+                            </div>
+                        </div>
+                        <Filelist onDelete={handleDelete} products={products} />
+                    </Content>
+                    <Footer style={{ textAlign: 'center' }}>
+                        Ant Design ©2016 Created by Ant UED
+                    </Footer>
+                </Layout>
+            </Layout>
         </Layout>
     );
     }

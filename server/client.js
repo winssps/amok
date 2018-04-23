@@ -14,7 +14,7 @@ import cors from 'koa2-cors';
 import moment from 'moment';
 
 import usermongo from './config.js';
-import { User, Groups } from './model.js';
+import { User, Groups, Share } from './model.js';
 import errorHandle from './errorHandle.js';
 
 const app = new Koa();
@@ -34,9 +34,7 @@ const secret = 'jwt_secret';
 app.use(jwt({
     secret,
     }).unless({
-        path: [/^\/login/, /^\/groups/, 
-            /^\/newgroups/, /^\/files/, 
-            /^\/upload/, /^\/download/],
+        path: [/^\/login/,/^\/register/, /^\/groups/, /^\/files/, /^\/upload/, /^\/sharegroups/]
 }));
 
 app.use(errorHandle);
@@ -63,16 +61,16 @@ var client = new oss({
 });
 
 
-let newUser = {
+/* let newUser = {
     uid: 0,
     username: "winssps",
     userpassword: "winssps1144",
     createTime: new Date(),
     lastLogin: null
-};
+}; */
 
 var result;
-
+/* 
 function randomNum(minNum, maxNum) {
     switch (arguments.length) {
         case 1:
@@ -85,11 +83,15 @@ function randomNum(minNum, maxNum) {
             return 0;
             break;
     }
-} 
+}  */
 
- //管理界面   请求修改数据 密码，昵称等
-router.post('/admin', async (ctx, next) => {
-    ctx.body = 200;
+//  //管理界面   请求修改数据 密码，昵称等
+// router.post('/admin', async (ctx, next) => {
+//     ctx.body = 200;
+// });
+
+router.post('/register', async (ctx, next) => {
+        
 });
 
 //登录请求验证
@@ -151,12 +153,24 @@ router.post('/upload', async (ctx, next) => {
     // console.log(ctx.request.body)    // if buffer or text
     // console.log(ctx.request.files)   // if multipart or urlencoded
     // console.log(ctx.request.fields)  // if json
-
   //  console.log(ctx.request.fields);
-    let ret;
+    let  groupsid = ctx.request.query.id;
+    let sharename = ctx.request.query.share;
+    let groupsname;
     let dbsubmits;
+    let shareret;
+    console.log(groupsid);
+    //   console.log(sharename);
+    sharename = "http://localhost:8000/#/share/" + sharename;
+
     await co(function* () {
-        ret = yield Groups.find({ _id: ctx.request.query.id });
+        shareret = yield Share.find({ sharelink: sharename });
+        //  console.log(ret[0]);
+    });
+
+    await co(function* () {
+         let ret = yield Groups.find({ _id: groupsid });
+         groupsname = ret[0].name;
     });
 
     if(ctx.request.files) {
@@ -165,7 +179,7 @@ router.post('/upload', async (ctx, next) => {
         let filename = file.name;
         await co(function* () {
             client.useBucket('testclass');
-            result = yield client.put('winssps/' + ret[0].name + "/" + filename, filepath);
+            result = yield client.put(shareret[0].username + '/' + groupsname + "/" + filename, filepath);
         }).catch(function (err) {
             console.log(err);
         });
@@ -178,12 +192,13 @@ router.post('/upload', async (ctx, next) => {
 //假设一个用户是一个文件夹，例如我的/winssps 用户名做文件夹根目录
 router.post('/newgroups', async (ctx, next) => {
     let newgroups = JSON.parse(ctx.request.body);
-    const {name, date, time} = newgroups;
+    const {name, date, time, attribute} = newgroups;
     let dbgroups = {
         src: name + "/",  //分组路径名称
         name: name,  //名称
         time: time,   //截止时间
-        submits: 0   //提交人数
+        submits: 0,   //提交人数
+        attribute: attribute
     }
     let ret;
     await co(function* () {
@@ -208,19 +223,25 @@ router.post('/newgroups', async (ctx, next) => {
 });
 //获取提交作业的分组
 router.get('/groups', async (ctx, next) => {
+    let username = ctx.request.query.name; //获取分享链接后缀
     let ret;
     let result;
     let newdata = [];
     await co(function* () {
         ret = yield Groups.find({});
+     //   console.log(ret)
+
         for (let index = 0; index < ret.length; index++) {
             client.useBucket('testclass');
             result = yield client.list({
                     'max-keys': 100,
-                    'prefix': 'winssps/' + ret[index].name + '/'
+                    'prefix': username + '/' + ret[index].name + '/'
                 });
-            yield Groups.update({ name: ret[index].name },
-                { $set: { 'submits': result.objects.length}});
+                if(result.objects != undefined) {
+                    yield Groups.update({ name: ret[index].name },
+                    { $set: { 'submits': result.objects.length}});
+                }
+          
         let time = new moment(ret[index].time).format('YYYY-MM-DD HH:mm');
         let newobj = {
             _id: ret[index]._id,
@@ -259,7 +280,7 @@ router.get('/files', async (ctx, next) => {
    // console.log(ctx.request.query);
     let id = ctx.request.query.id;
     let ret;
-    console.log("分组的id：" + id);
+//    console.log("分组的id：" + id);
     await co(function* () {
         ret = yield Groups.find({ _id: id});
     });
@@ -308,6 +329,92 @@ router.get('/download', async (ctx, next) => {
         message: "下载完成"
     };
 });
+
+
+
+router.get('/showshare', async (ctx, next) => {
+
+    let name = ctx.request.query.name;
+    let ret;
+    let sharelink;
+ //   console.log("分组的name：" + name);
+    await co(function* () {
+        ret = yield User.find({ username: name });
+      //  console.log(ret[0].email);
+        if (ret.length > 0) { //有结果表示有相应的用户
+            let useremail = ret[0].email;
+            let hexstr = useremail ;
+            let shasum = crypto.createHash('sha1');
+            shasum.update(hexstr);
+            let hexemail = shasum.digest('hex');
+            sharelink = "http://localhost:8000/#/share/" + hexemail;
+
+            ret = yield Share.find({ username: name });
+            if(ret.length > 0) {
+                console.log("已经存在了");
+            } else {
+                ret =  yield new Share({
+                    username: name,
+                    sharelink: sharelink
+                }).save();
+            }
+        }
+        
+    });
+    ctx.body = {
+        "sharelink" : sharelink,
+        status: 200
+    };
+});
+
+//获取提交作业的分组
+router.get('/sharegroups', async (ctx, next) => {
+
+    let sharename = ctx.request.query.share; //获取分享链接后缀
+ //   console.log(sharename);
+    sharename = "http://localhost:8000/#/share/" + sharename;
+    console.log(sharename);
+    let shareret;
+    let result;
+    let newdata = [];
+    let username;
+    await co(function* () {
+        shareret = yield Share.find({ sharelink: sharename });
+      //  console.log(ret[0]);
+    });
+    if (shareret[0]) {
+        await co(function* () {
+            let ret = yield Groups.find({ attribute: shareret[0].username });  //查询所有分组
+            for (let index = 0; index < ret.length; index++) {//所有分组的循环
+                client.useBucket('testclass');
+                result = yield client.list({   //刷新oss 分组里边的文件数量
+                    'max-keys': 100,
+                    'prefix': shareret[0].username + '/' + ret[index].name + '/'
+                });
+                if (result.objects != undefined) {
+                    yield Groups.update({ name: ret[index].name },//刷新数据库文件数量
+                        { $set: { 'submits': result.objects.length } });
+                }
+
+                //刷新日期显示方式
+                let time = new moment(ret[index].time).format('YYYY-MM-DD HH:mm');
+                let newobj = {   //整理文件信息对象
+                    _id: ret[index]._id,
+                    src: ret[index].src,  //分组路径名称
+                    name: ret[index].name,  //名称
+                    time: time,   //截止时间
+                    submits: ret[index].submits   //提交人数
+                }
+                newdata.push(newobj);  //对象加数组
+            }
+        });
+    }
+    ctx.status = 200;
+    ctx.body = newdata;  //数据返回前端
+});
+
+
+
 
 app.listen(4535, () => {
     console.log('listening to  http://localhost:4535');

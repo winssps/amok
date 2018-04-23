@@ -1,8 +1,7 @@
 import request from '../utils/request';
 
 export function patch(params) {
-
-  return request('http://localhost:4535/groups', {
+  return request('http://localhost:4535/groups?name=' + params, {
     method: 'get',
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -46,6 +45,16 @@ export function downLoad(params) {
 }
 
 
+export function sharegroups(params) {
+  return request('http://localhost:4535/sharegroups?share=' + params, {
+    method: 'get',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'text/plain'
+    },
+    mode: 'cors',
+  });
+}
 
 
 

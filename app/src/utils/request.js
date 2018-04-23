@@ -1,5 +1,8 @@
 import fetch from 'dva/fetch';
 
+import getAuthHeader from "./auth";
+import { getCookie } from "./helper";
+
 function parseJSON(response) {
   return response.json();
 }
@@ -22,8 +25,11 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 
-export default async function request(url, options) {
-  return fetch(url, options)
+export default function request(url, options) {
+  const sso_token = getCookie('token');
+  const authHeader = getAuthHeader(sso_token);
+  console.log(authHeader);
+  return fetch(url, {...options, ...authHeader})
     .then(checkStatus)
     .then(parseJSON)
     .then((data) => ({ data }))

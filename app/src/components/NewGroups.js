@@ -48,7 +48,10 @@ const NewGroups = ({form, dispatch, newgroups}) =>  {
     }
     return (
         <div>
-            <Button style={{marginBottom:"30px"}} type="primary" onClick={showModal}>新建</Button>
+            {/*
+                <Button style={{marginBottom:"30px"}} type="primary" onClick={showModal}>新建</Button>
+            */}
+            
             <Modal
                 title="新建分组"
                 visible={newgroups.visible}
@@ -57,7 +60,7 @@ const NewGroups = ({form, dispatch, newgroups}) =>  {
             >
                 <Input onChange={onChangeinput} placeholder="名称" style={{marginBottom:"30px",}} />
                 <DatePicker onChange={onChangedate} />
-                <TimePicker onChange={onChangetime} style={{float: "right",}}  format={format} />
+                <p style={{marginTop:"10px"}}><TimePicker onChange={onChangetime} format={format}  /></p>
             </Modal>
         </div>
     );

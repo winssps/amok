@@ -10,9 +10,13 @@ import './index.css';
 
 // 3. Model
 app.model(require('./models/getgroups').default);
-app.model(require('./models/file').default);
+app.model(require('./models/showinfo').default);
 app.model(require('./models/login').default);
 app.model(require('./models/newgroups').default);
+app.model(require('./models/register').default);
+app.model(require('./models/sharepage').default);
+app.model(require('./models/shareview').default);
+
 // 4. Router
 app.router(require('./router').default);
 

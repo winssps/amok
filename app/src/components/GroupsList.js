@@ -14,7 +14,7 @@ const ProductList = ({ onShow, onDelete, onDownload, products }) => {
         key: 'time',
         dataIndex: 'time',
     }, {
-        title: '已提交人数（56人）',
+        title: '已提交人数',
         key: 'submits',
         dataIndex: 'submits',
     },{
@@ -41,9 +41,14 @@ const ProductList = ({ onShow, onDelete, onDownload, products }) => {
     }];
     // 定义分页对象
     const pagination = {
-        pageSize: 5,
+        pageSize: 8,
         onChange: () => { },
     };
+    const rowselection = {
+        onSelect: ({key}) => {
+            console.log("hello");
+        }
+    }
     return (  //这个Table 包含了一个头部 
         <Table
         dataSource={products.list}

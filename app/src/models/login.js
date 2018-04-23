@@ -1,9 +1,9 @@
 
 
 import {  routerRedux } from 'dva/router';
-import { patch } from '../services/login';
+import { login } from '../services/auth';
 
-import { setCookie} from '../utils/helper';
+import { setCookie, getCookie} from '../utils/helper';
 
 export default {
     namespace: 'login',
@@ -24,10 +24,17 @@ export default {
         setup({ dispatch, history }) {
             history.listen(location => {
                 if (location.pathname === '/login') {
-                    dispatch({
+                    let username = getCookie("username");
+                    if(username !== null) {
+                        dispatch(
+                            routerRedux.push({
+                                pathname: '/admin',
+                        }));
+                    }
+                  /*  dispatch({
                         type: 'querySuccess',
                         payload: {}
-                    });
+                    });*/
                 }
             });
         }
@@ -35,7 +42,7 @@ export default {
     effects: {
         *submit({ payload }, { select, call, put }) {
             yield put({ type: 'showLoading' });
-            const { data } = yield call(patch, payload);
+            const { data } = yield call(login, payload);
             if (data) {
                 setCookie("token", data.token);   //设置全局的cookie
                 setCookie("username", data.user);
@@ -43,7 +50,7 @@ export default {
                     type: 'loginSuccess',
                     payload: data,
                 });
-                yield put(routerRedux.push('/'));
+                yield put(routerRedux.push('/admin'));
             }
         },
     }

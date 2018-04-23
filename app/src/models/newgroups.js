@@ -1,6 +1,7 @@
 
 
-import { patch }  from '../services/newgroups';
+import { newgroups }  from '../services/newgroups';
+import { getCookie } from '../utils/helper';
 
 
 export default {
@@ -13,27 +14,26 @@ export default {
     },
     reducers: {
         show(state) {
-           const visible = true;
-            return { ...state, visible: visible};
+            return { visible: true };
         },
         ok(state, { payload }) {
-            const visible = false;
-            return { ...state, visible: visible };
+
+            return { visible: false };
         },
         cancel(state) {
-            const visible = false;
-            return { ...state, visible: visible };
+            return { visible: false };
         },
-    },
-    subscriptions: {
-       
     },
     effects: {
         *submit({ payload }, { select, call, put }) {
-            yield put({ type: 'showLoading' });
-            const { data } = yield call(patch, payload);
+            payload.attribute = getCookie("username");
+            console.log(payload);
+            const { data } = yield call(newgroups, payload);
               if (data) {
                //   console.log(data);
+                  yield put({
+                      type: 'ok',
+                  });
                   yield put({
                       type: 'getgroups/query',
                   });
