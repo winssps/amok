@@ -18,7 +18,7 @@ export function setCookie(name, info) {
 
 export function delCookie(name) {
     if (getCookie(name)) {
-        console.log("hello");
+    
         document.cookie = name + '=;path=/;expires=Thu, 01-Jan-70 00:00:01 GMT; domain=localhost';
     }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu } from 'antd';
 import { routerRedux } from 'dva/router';
 import { getCookie } from '../utils/helper';
 
@@ -9,7 +9,7 @@ const { Header, Content, Footer } = Layout;
 
 
 const Index = ({ dispatch, index }) => {
-   /* function handleDelete(id) { //点击删除之后，相当于路由发出了一个delete action 
+   /* function handleDelete(id) { //点击删除之后，相当于路由发出了一个delete action
         dispatch({
             type: 'getgroups/delete',
             payload: id,

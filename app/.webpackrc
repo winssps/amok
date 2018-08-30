@@ -1,6 +1,17 @@
 {
-  "extraBabelPlugins": [
-    ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
-  ]
-
+  "env": {
+    // 开发环境
+    "development": {
+      "extraBabelPlugins": [
+        ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
+      ]
+    },
+    // build 时的生产环境
+    "production": {
+      "extraBabelPlugins": [
+        "transform-decorators-legacy",
+        ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
+      ]
+    }
+  }
 }

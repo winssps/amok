@@ -8,16 +8,17 @@ import { setCookie, getCookie} from '../utils/helper';
 export default {
     namespace: 'login',
     state: {
-        name: "登录",
+        name: null,
+        message: null,
         isLogin: false,
     },
     reducers: {
-        querySuccess(state) {
-            return {...state};
+        querySuccess(state, { payload }) {
+            return {...state, message: payload};
         },
         loginSuccess(state, { payload }) {
-            const { user } = payload;
-            return { ...state, name: user, isLogin: true };
+            const { userName, message } = payload;
+            return { ...state, name: userName, isLogin: true, message: message };
         }
     },
     subscriptions: {
@@ -31,10 +32,6 @@ export default {
                                 pathname: '/admin',
                         }));
                     }
-                  /*  dispatch({
-                        type: 'querySuccess',
-                        payload: {}
-                    });*/
                 }
             });
         }
@@ -44,13 +41,20 @@ export default {
             yield put({ type: 'showLoading' });
             const { data } = yield call(login, payload);
             if (data) {
-                setCookie("token", data.token);   //设置全局的cookie
-                setCookie("username", data.user);
-                yield put({
-                    type: 'loginSuccess',
-                    payload: data,
-                });
-                yield put(routerRedux.push('/admin'));
+                  if(data.message == "登录成功") {
+                      setCookie("token", data.token);   //设置全局的cookie
+                      setCookie("username", data.user);
+                      yield put({
+                          type: 'loginSuccess',
+                          payload: data,
+                      });
+                      yield put(routerRedux.push('/admin'));
+                  } else {
+                    yield put({
+                        type: 'querySuccess',
+                        payload: data.message,
+                    });
+                  }
             }
         },
     }

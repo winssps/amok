@@ -2,7 +2,7 @@ import request from '../utils/request';
 
 export function login(params) {
 
-    return request('http://localhost:4535/login', {
+    return request('http://localhost:4535/user/login', {
         method: 'POST',
         headers: {
             'Access-Control-Allow-Origin': '*',
@@ -15,7 +15,7 @@ export function login(params) {
 
 export function register(params) {
 
-    return request('http://localhost:4535/register', {
+    return request('http://localhost:4535/user/register', {
         method: 'POST',
         headers: {
             'Access-Control-Allow-Origin': '*',

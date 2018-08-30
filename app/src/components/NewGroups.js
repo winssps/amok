@@ -1,29 +1,13 @@
-import { Modal, Button, Input, TimePicker, DatePicker } from 'antd';
+import { Modal, Input, DatePicker } from 'antd';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
-import { getCookie } from '../utils/helper';
-
-const format = 'HH:mm';
+import moment from 'moment';
 
 
 const NewGroups = ({form, dispatch, newgroups}) =>  {
 
     const newvalues = {
         name: null,
-        date: null,
-        time: null,
-    };
-    function showModal(){
-        if (getCookie("token") !== null) {
-            dispatch({
-                type: 'newgroups/show',
-            });
-        } else {
-            dispatch(
-                routerRedux.push({
-                    pathname: '/login',
-            })); 
-        }
+        date: null
     };
     function handleOk(e)  {
         dispatch({
@@ -39,19 +23,29 @@ const NewGroups = ({form, dispatch, newgroups}) =>  {
      function onChangeinput(e) {
          newvalues.name =  e.target.value;
     }
-    function onChangedate(date, dateString) {
-        newvalues.date = date;
+    function disabledDate(current) {
+      // Can not select days before today and today
+      return current && current < moment().endOf('day');
     }
-   
-    function onChangetime(time, dateString) {
-        newvalues.time = time;
+    /*function disabledDateTime() {
+      return {
+        disabledHours: () => range(0, 24).splice(4, 20),
+        disabledMinutes: () => range(30, 60),
+        disabledSeconds: () => [55, 56],
+      };
+    }
+    function range(start, end) {
+      const result = [];
+      for (let i = start; i < end; i++) {
+        result.push(i);
+      }
+      return result;
+    }*/
+    function onhandleDatePicker(date) {
+        newvalues.date = date;
     }
     return (
         <div>
-            {/*
-                <Button style={{marginBottom:"30px"}} type="primary" onClick={showModal}>新建</Button>
-            */}
-            
             <Modal
                 title="新建分组"
                 visible={newgroups.visible}
@@ -59,14 +53,17 @@ const NewGroups = ({form, dispatch, newgroups}) =>  {
                 onCancel={handleCancel}
             >
                 <Input onChange={onChangeinput} placeholder="名称" style={{marginBottom:"30px",}} />
-                <DatePicker onChange={onChangedate} />
-                <p style={{marginTop:"10px"}}><TimePicker onChange={onChangetime} format={format}  /></p>
+                <DatePicker
+                  format="YYYY-MM-DD HH:mm:ss"
+                  disabledDate={disabledDate}
+                  showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+                  onChange={onhandleDatePicker}
+                />
             </Modal>
         </div>
     );
 };
 
-export default connect(({ newgroups }) => {
-    return {newgroups };
-}
-)(NewGroups);
+export default connect(({ newgroups }) => ({
+    newgroups,
+}))(NewGroups);

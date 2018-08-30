@@ -8,7 +8,8 @@ var UserSchema = new mongoose.Schema({
     userpassword:String,
     createTime: Date,
     lastLogin: Date,
-    email: String
+    email: String,
+    invite: String
 });
 
 
@@ -18,7 +19,8 @@ var GroupsList = new mongoose.Schema({
     name: String,  //名称
     time: Date,   //截止时间
     submits: Number,   //提交人数
-    attribute: String
+    attribute: String,  //归属账号
+    type: Number
 });
 
 var ShareList = new mongoose.Schema({
@@ -29,19 +31,3 @@ var ShareList = new mongoose.Schema({
 module.exports.User = mongoose.model('User', UserSchema);
 module.exports.Groups = mongoose.model('File', GroupsList);
 module.exports.Share = mongoose.model('Share', ShareList);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -7,13 +7,13 @@ import Filelist from '../components/Filelist';
 import UpLoadFile from '../components/UpLoadFile';
 
 import { getCookie } from '../utils/helper';
-const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
+const { Header, Content, Footer } = Layout;
 
+const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 const ShowInfo = ({ dispatch, products }) => {
-    function handleDelete(id) { //点击删除之后，相当于路由发出了一个delete action 
-        
+    function handleDelete(id) { //点击删除之后，相当于路由发出了一个delete action
+
     }
     function handleBack(params) {
         dispatch(
@@ -23,13 +23,13 @@ const ShowInfo = ({ dispatch, products }) => {
     }
     var username = getCookie("username");
     if (username === null) username = "登录";
-    if (products.loading === true) {
-        return (
-            <div style={{ left: "50%", position: "absolute", top: "50%"}}>
-                <Spin size="large"  />  
-            </div>
-        );
-    } else {
+    // if (products.loading === true) {
+    //     return (
+    //         <div style={{ left: "50%", position: "absolute", top: "50%"}}>
+    //             <Spin size="large" indicator={antIcon}  />
+    //         </div>
+    //     );
+    // } else {
     return (
         <Layout>
             <Header className="header">
@@ -77,7 +77,7 @@ const ShowInfo = ({ dispatch, products }) => {
             </Layout>
         </Layout>
     );
-    }
+    // }
 };
 
 export default connect(({showinfo}) => {

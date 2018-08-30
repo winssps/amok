@@ -30,7 +30,6 @@ export default {
             console.log(payload);
             const { data } = yield call(newgroups, payload);
               if (data) {
-               //   console.log(data);
                   yield put({
                       type: 'ok',
                   });

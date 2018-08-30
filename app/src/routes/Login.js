@@ -1,23 +1,23 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu, Breadcrumb, message } from 'antd';
 import { routerRedux } from 'dva/router';
 
-
 import LoginForm from '../components/LoginForm';
-
-import { getCookie } from '../utils/helper';
 
 const { Header, Content, Footer } = Layout;
 
 
 
 const Login = ({ dispatch, login }) => {
-    function handleonSubmit(value) { //点击删除之后，相当于路由发出了一个delete action 
+    function handleonSubmit(value) { //点击删除之后，相当于路由发出了一个delete action
         dispatch({
             type: 'login/submit',
-            payload: value, 
+            payload: value,
         });
+    }
+    if (login.message != null) {
+        message.success(login.message);
     }
     return (
         <Layout>
@@ -50,7 +50,7 @@ const Login = ({ dispatch, login }) => {
             <Footer style={{ textAlign: 'center' }}>
                 Ant Design ©2016 Created by Ant UED
             </Footer>
-        </Layout>    
+        </Layout>
     );
 };
 

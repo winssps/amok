@@ -31,7 +31,7 @@ const Filelist = ({onDelete, products }) => {
         pageSize: 10,
         onChange: () => { },
     };
-    return (  //这个Table 包含了一个头部 
+    return (  //这个Table 包含了一个头部
         <Table
             dataSource={products.list}
             columns={columns}
@@ -42,7 +42,7 @@ const Filelist = ({onDelete, products }) => {
 
 Filelist.propTypes = {
     onDelete: PropTypes.func.isRequired,
-    products: PropTypes.array.isRequired,
+    products: PropTypes.object.isRequired,
 };
 
 export default Filelist;

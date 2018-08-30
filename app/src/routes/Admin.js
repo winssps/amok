@@ -1,10 +1,8 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Layout, Menu, Breadcrumb, Icon, message } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, message, Spin } from 'antd';
 import { routerRedux } from 'dva/router';
 import { getCookie, delCookie } from '../utils/helper';
-
-
 import GroupsList from '../components/GroupsList';
 import NewGroups from '../components/NewGroups';
 import SharePage from "../components/SharePage";
@@ -13,9 +11,10 @@ const { SubMenu } = Menu;
 const { Header, Content, Sider, Footer } = Layout;
 
 
+const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 const Admin = ({ dispatch, getgroups }) => {
-    function handleDelete(id) { //点击删除之后，相当于路由发出了一个delete action 
+    function handleDelete(id) { //点击删除之后，相当于路由发出了一个delete action
         dispatch({
             type: 'getgroups/delete',
             payload: id,
@@ -29,6 +28,7 @@ const Admin = ({ dispatch, getgroups }) => {
                     id: id,
                 },
             }));
+
     }
     function handleonDownload(id) {
         dispatch({
@@ -36,7 +36,14 @@ const Admin = ({ dispatch, getgroups }) => {
             payload: id,
         });
     }
+    function handleRecovery(id) {
+      dispatch({
+        type: 'getgroups/recovery',
+        payload: id,
+      });
+    }
     var username = getCookie("username");
+    var isShow = getgroups ? "block": "none";
     if(username === null) {
         dispatch(
             routerRedux.push({
@@ -78,7 +85,7 @@ const Admin = ({ dispatch, getgroups }) => {
                                         pathname: '/',
                                     }));
                                 break;
-                            
+
                             default:
                                 break;
                         }
@@ -87,7 +94,7 @@ const Admin = ({ dispatch, getgroups }) => {
                     }}
                 >
                     <Menu.Item key="1">主页</Menu.Item>
-                    <SubMenu key="sub1" style={{ "float": "right", }} 
+                    <SubMenu key="sub1" style={{ "float": "right", }}
                     title={<span>{username}</span>}
                     >
                         <Menu.Item key="b2">新建分组</Menu.Item>
@@ -104,18 +111,30 @@ const Admin = ({ dispatch, getgroups }) => {
                         defaultSelectedKeys={['r1']}
                         style={{ height: '100%', borderRight: 0 }}
                         onClick = { ({key}) => {
+                            if(key === "r1") {
+                                dispatch({
+                                  type: 'getgroups/query',
+                                  payload: username,
+                                });
+                            }
                             if(key === "r2") {
                                 dispatch({
                                     type: 'sharepage/showshare',
                                     payload: username,
                                 });
-                            }      
+                            }
+                            if(key === "r3") {
+                              dispatch({
+                                type: 'getgroups/delist',
+                                payload: getCookie("username"),
+                              });
+                            }
                         }}
                     >
                        <Menu.Item key="r1">
                             <Icon type="pie-chart" />
                             <span>我的分组</span>
-                        </Menu.Item> 
+                        </Menu.Item>
                         <Menu.Item key="r2">
                             <Icon type="desktop" />
                             <span>生成链接</span>
@@ -133,20 +152,21 @@ const Admin = ({ dispatch, getgroups }) => {
                     </Breadcrumb>
                     <Content style={{ background: '#fff', margin: 0, minHeight: 280 }}>
                         <GroupsList onShow={handleonShow} onDelete={handleDelete}
+                            onRecovery = {handleRecovery}
                             onDownload={handleonDownload}
-                            products={getgroups} />    
+                            products={getgroups} />
                         <NewGroups />
                         <SharePage />
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
-                        Ant Design ©2016 Created by Ant UED
+                        © 2018 Created by Simpler
                     </Footer>
                 </Layout>
             </Layout>
+
         </Layout>
     );
 }
-// export default Products;
 export default connect(({ getgroups }) => ({
     getgroups,
 }))(Admin);

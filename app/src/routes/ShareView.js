@@ -4,7 +4,6 @@ import { Layout, Menu, Breadcrumb, Spin } from 'antd';
 import { routerRedux } from 'dva/router';
 
 import GroupsList from '../components/GroupsList';
-import NewGroups from '../components/NewGroups';
 
 import { getCookie } from '../utils/helper';
 
@@ -22,12 +21,6 @@ const ShareView = ({ dispatch, shareview }) => {
                     id: id,
                 },
             }));
-    }
-    function handleonDownload(id) {
-        dispatch({
-            type: 'shareview/download',
-            payload: id,
-        });
     }
     var username = getCookie("username");
     if (username === null) username = "登录";

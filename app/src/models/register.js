@@ -5,19 +5,18 @@ import { register } from '../services/auth';
 export default {
     namespace: 'register',
     state: {
-        name: "注册",
+        name: null,
         isLogin: false,
     },
     reducers: {
-        querySuccess(state) {
-            return { ...state };
+        querySuccess(state, { payload }) {
+            return { ...state, name: payload };
         }
     },
     subscriptions: {
         setup({ dispatch, history }) {
             history.listen(location => {
                 if (location.pathname === '/reg') {
-                    console.log(location);
                 }
             });
         }
@@ -27,8 +26,15 @@ export default {
             yield put({ type: 'showLoading' });
             const { data } = yield call(register, payload);
             if (data) {
-
-                yield put(routerRedux.push('/login'));
+                yield put({
+                  type: 'querySuccess',
+                  payload: data.message,
+                });
+            }
+            else {
+              yield put({
+                type: 'querySuccess',
+              });
             }
         },
     }

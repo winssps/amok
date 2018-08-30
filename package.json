@@ -1,16 +1,29 @@
 {
   "name": "koa-oss",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "private": false,
   "dependencies": {
-    "antd": "^3.1.5",
+    "koa": "^2.5.2",
     "bootstrap": "^3.3.7",
     "koa-better-body": "^3.0.4",
     "koa-cookie": "^1.0.0",
     "koa2-cors": "^2.0.5",
+    "koa-router": "^7.4.0",
+    "koa-views": "^6.1.4",
+    "koa-session": "^5.8.3",
+    "koa-jwt": "^3.3.2",
+    "koa-static": "^5.0.0",
+    "ali-oss": "^6.0.1",
     "mongoose": "^4.13.7",
     "react-bootstrap": "^0.31.5",
-    "webpack": "^3.10.0"
+    "webpack": "^3.10.0",
+    "antd": "^3.1.6",
+    "babel-plugin-import": "^1.6.3",
+    "dva": "^2.1.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-copy-to-clipboard": "^5.0.1",
+    "copy-to-clipboard": "^3.0.8"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -19,11 +32,19 @@
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "react-hot-loader": "^3.0.0",
-    "webpack-dev-server": "^2.9.7"
+    "webpack-dev-server": "^2.9.7",
+    "babel-plugin-dva-hmr": "^0.3.2",
+    "eslint": "^4.14.0",
+    "eslint-config-umi": "^0.1.1",
+    "eslint-plugin-flowtype": "^2.34.1",
+    "eslint-plugin-import": "^2.6.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.1.0",
+    "redbox-react": "^1.4.3",
+    "roadhog": "^2.0.0"
   },
   "scripts": {
     "start": "nodemon server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build-dev": "./node_modules/.bin/webpack-dev-server --config webpack.config.js --colors"
   }
 }

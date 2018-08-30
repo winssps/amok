@@ -8,7 +8,7 @@ function parseJSON(response) {
 }
 
 function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= 200 && response.status < 500) {
     return response;
   }
 
@@ -28,16 +28,10 @@ function checkStatus(response) {
 export default function request(url, options) {
   const sso_token = getCookie('token');
   const authHeader = getAuthHeader(sso_token);
-  console.log(authHeader);
+//  console.log(authHeader);
   return fetch(url, {...options, ...authHeader})
     .then(checkStatus)
     .then(parseJSON)
     .then((data) => ({ data }))
     .catch((err) => ({ err }));
 }
-
-
-
-
-
-

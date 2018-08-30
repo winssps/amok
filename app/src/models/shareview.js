@@ -1,6 +1,4 @@
 
-import { message } from 'antd';
-import { routerRedux } from 'dva/router';
 import { sharegroups } from '../services/getgroups';
 import { setCookie } from '../utils/helper';
 
@@ -9,6 +7,7 @@ export default {
     state: {
         list: [],
         loading: false,
+        type: 1
     },
     reducers: {
         showLoading(state, action) {
@@ -23,11 +22,9 @@ export default {
             history.listen(location => {
                 let regexp = new RegExp('^/share/[A-Za-z0-9]+$');
                 let reg = new RegExp('[A-Za-z0-9]+$');
-            //    console.log(location);
                 if (regexp.test(location.pathname)) {
 
                     var newstr = location.pathname.match(reg);
-               //     console.log(newstr[0]);
                         setCookie("share",newstr);
                     dispatch({
                         type: 'share',
@@ -40,14 +37,13 @@ export default {
     effects: {
         *share({ url }, { select, call, put }) {  //拉取列表
             yield put({ type: 'showLoading' });
-            console.log(url);
             let { data } = yield call(sharegroups, url);
             if (data) {
-            //    console.log(data);
                 yield put({
                     type: 'querySuccess',
                     payload: {
                         list: data,
+                        type: 1
                     }
                 });
             }

@@ -41,6 +41,8 @@ const LoginForm = ({form, onSubmitValues }) => {
                         <Checkbox>记住密码</Checkbox>
                     )}
                     <a style={{float:"right"}} className="login-form-forgot" href="">忘记密码</a>
+
+                    <a style={{float:"right", marginRight:"20px"}} className="login-form-forgot" href="/#/reg">注册</a>
                     <Button style={{display:"block",margin:"10px auto",width:"100%"}} type="primary" htmlType="submit" className="login-form-button">
                         登录
                     </Button>
@@ -58,4 +60,3 @@ LoginForm.propTypes = {
 };
 
 export default WrappedNormalLoginForm;
-

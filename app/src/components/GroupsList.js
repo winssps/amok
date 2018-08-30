@@ -4,7 +4,8 @@ import { Table, Button, Popconfirm } from 'antd';
 
 import { getCookie } from '../utils/helper';
 
-const ProductList = ({ onShow, onDelete, onDownload, products }) => {
+const ProductList = ({ onShow, onDelete, onRecovery, onDownload, products }) => {
+
     const columns = [{
         title: '名称',
         key: 'name',
@@ -20,23 +21,32 @@ const ProductList = ({ onShow, onDelete, onDownload, products }) => {
     },{
         title: 'Actions',
         render: (text, record) => {
-            if(getCookie("token")) {
+            if(products.type == 1) {
+
+              if(getCookie("token")) {
                 return (
-                    <div>
-                        <Button style={{marginRight: "20px"}}  onClick={() => onShow(record._id)}>查看</Button>
-                        <Popconfirm title="Delete?" onConfirm={() => onDelete(record._id)}>
-                            <Button>Delete</Button>
-                        </Popconfirm> 
-                        <Button style={{ marginLeft: "20px" }} onClick={() => onDownload(record._id)}>下载全部</Button>
-                    </div>
-                    
-                    );  
-            } else {
+                  <div>
+                  <Button style={{marginRight: "20px"}}  onClick={() => onShow(record._id)}>查看</Button>
+                <Popconfirm title="删除分组?" onConfirm={() => onDelete(record._id)}>
+              <Button>删除</Button>
+                </Popconfirm>
+                <Button style={{ marginLeft: "20px" }} onClick={() => onDownload(record._id)}>下载全部</Button>
+                </div>
+
+              );
+              } else {
                 return (
-                    <Button onClick={() => onShow(record._id)}>查看</Button>
-                ); 
+                  <Button onClick={() => onShow(record._id)}>查看</Button>
+              );
+              }
+            } else if(products.type == 3) {
+                return (
+                  <Popconfirm title="恢复分组?" onConfirm={() => onRecovery(record._id)}>
+                    <Button>恢复</Button>
+                  </Popconfirm>
+              );
             }
-            
+
         },
     }];
     // 定义分页对象
@@ -44,17 +54,12 @@ const ProductList = ({ onShow, onDelete, onDownload, products }) => {
         pageSize: 8,
         onChange: () => { },
     };
-    const rowselection = {
-        onSelect: ({key}) => {
-            console.log("hello");
-        }
-    }
-    return (  //这个Table 包含了一个头部 
+    return (  //这个Table 包含了一个头部
         <Table
         dataSource={products.list}
         columns={columns}
         pagination={pagination}
-      />    
+      />
     );
 };
 
@@ -62,7 +67,7 @@ ProductList.propTypes = {
     onShow: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     onDownload: PropTypes.func.isRequired,
-    products: PropTypes.array.isRequired,
+    products: PropTypes.object.isRequired,
 };
 
 export default ProductList;

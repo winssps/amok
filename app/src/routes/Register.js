@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Layout, Menu, Breadcrumb,message } from 'antd';
+import { Layout, Menu, Breadcrumb, message } from 'antd';
 import { routerRedux } from 'dva/router';
 
 
@@ -9,17 +9,20 @@ import RegisterForm from '../components/RegisterForm';
 
 const { Header, Content, Footer } = Layout;
 
-
-
 const Register = ({ dispatch, register }) => {
-    function handleonSubmit(value) { //点击删除之后，相当于路由发出了一个delete action 
+    function handleonSubmit(value) {
         dispatch({
             type: 'register/submit',
-            payload: value, 
+            payload: value,
         });
     }
-    if (register.isRegister) {
-        message.success("注册成功，3秒之后跳到登录界面……");
+    if (register.name != null) {
+        message.success(register.name);
+        if(register.name == "注册成功") {
+           setTimeout(function () {
+               dispatch(routerRedux.push({pathname: '/login',}));
+           }, 2000);
+        }
     }
     return (
         <Layout>
@@ -52,7 +55,7 @@ const Register = ({ dispatch, register }) => {
             <Footer style={{ textAlign: 'center' }}>
                 Ant Design ©2016 Created by Ant UED
             </Footer>
-        </Layout>    
+        </Layout>
     );
 };
 

@@ -27,7 +27,6 @@ export default {
         *showshare({ payload }, { select, call, put }) {
             const { data } = yield call(getlink, payload);
             if (data) {
-               //    console.log(data);
                 yield put({
                     type: 'show',
                     link: data.sharelink,
